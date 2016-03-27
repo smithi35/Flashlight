@@ -14,6 +14,27 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
+namespace Windows.MediaCapture.VideoDeviceController
+{
+    public sealed class TorchControl
+    {
+        private bool enabled;
+
+        public bool Enabled
+        {
+            get
+            {
+                return enabled;
+            }
+            set
+            {
+                enabled = value;
+            }
+        }
+
+        public bool Supported { get; }
+    }
+}
 
 namespace Flashlight
 {
@@ -31,20 +52,21 @@ namespace Flashlight
             light.Click += Light_Click;
         }
 
-        private async Task Light_Click(object sender, RoutedEventArgs e)
-        //private void Light_Click(object sender, RoutedEventArgs e)
+        //private async Task Light_Click(object sender, RoutedEventArgs e)
+        private void Light_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("Click");
+            var torch = Windows.Media.Devices.VideoDeviceController.TorchControl;
 
-            using Windows.Devices.Lights;
-            Lamp lamp;
-            lamp = await Lamp.GetDefaultAsync();
-
-            if (lamp == null)
+            if (torch.Enabled)
             {
-                System.Diagnostics.Debug.WriteLine("No Lamp device found");
-                return;
+                torch.Enabled = false;
             }
+            else
+            {
+                torch.Enabled = true;
+            }
+
+            System.Diagnostics.Debug.WriteLine(torch.Enabled);
 
             //throw new NotImplementedException();
         }
